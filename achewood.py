@@ -34,6 +34,6 @@ for thing in rrule.rrule(rrule.DAILY, dtstart=d, until=daysLater):
 # delete empty files for days without a strip
 os.chdir("/Users/Winchester/Desktop/achewood")
 for file in os.listdir("."):
-    if file.st_size == 0:
+    if os.stat(file).st_size == 0:
         os.remove(file)
         print 'Cleaning up ...'
