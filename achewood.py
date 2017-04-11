@@ -1,39 +1,37 @@
-import urllib
-import os
-from dateutil import rrule
-from datetime import *
-from time import *
+import requests
+from datetime import date
+from os import environ
+import random
+import csv
+from time import sleep
+from flask import Flask
 
-# set start date
-d = date(2001, 10, 01)
-tt = d.timetuple()
+app = Flask(__name__)
 
-# difference from start date to today
-today = date.today()
-difference = today - d
+webhook = environ.get('SLACK_WEBHOOK', None)
 
-# set number of days to spin through
-daysLater = d + timedelta(difference.days)
+url_stub = 'http://achewood.com/comic.php?date='
+strip = '10012001'
 
-# the loop
-for thing in rrule.rrule(rrule.DAILY, dtstart=d, until=daysLater):
-    year = str(thing)[:4]
-    month = str(thing)[5:7]
-    day = str(thing)[8:10]
-    
-    # create empty gif
-    filename = year + month + day + '.gif'
-    f = open(filename,'wb')
-    print 'Grabbing Achewood for ' + month + '/' + day + '/' + year
-    
-    # write content
-    f.write(urllib.urlopen('http://achewood.com/comic.php?date=' + month + day + year).read())
-    f.close()
-    sleep(3)
 
-# delete empty files for days without a strip
-os.chdir("/Users/Winchester/Desktop/achewood")
-for file in os.listdir("."):
-    if os.stat(file).st_size == 0:
-        os.remove(file)
-        print 'Cleaning up ...'
+@app.route('/', methods=['GET'])
+def index():
+    return 'hello'
+
+
+@app.route('/post', methods=['POST'])
+def post():
+    try:
+        with open('achewood.txt', 'r') as strips:
+            ls = [row[0] for row in csv.reader(strips)]
+            random_day = random.randint(0, ls.length)
+            strip = ls[random_day]
+    except FileNotFoundError:
+        pass
+
+    return url_stub + strip
+
+
+if __name__ == '__main__':
+    port = int(environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
