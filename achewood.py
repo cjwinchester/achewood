@@ -12,7 +12,7 @@ token = environ.get('SLASH_TOKEN', None)
 def post():
     if request.form['token'] == token:
         url_stub = 'http://achewood.com/comic.php?date='
-        random_day = random.randint(0, len(strip_ls))
+        random_day = random.randint(0, len(strip_ls)-1)
         strip = strip_ls[random_day]
         response = {
             "response_type": "in_channel",
