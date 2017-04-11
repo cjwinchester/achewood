@@ -1,7 +1,6 @@
 from os import environ
 import random
-import json
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request
 from strips import strips as strip_ls
 
 app = Flask(__name__)
@@ -11,7 +10,7 @@ token = environ.get('SLASH_TOKEN', None)
 
 @app.route('/post', methods=['POST'])
 def post():
-    if token and json.loads(request.data)['token'] == token:
+    if request.form['token'] == token:
         url_stub = 'http://achewood.com/comic.php?date='
         random_day = random.randint(0, len(strip_ls))
         strip = strip_ls[random_day]
@@ -19,9 +18,12 @@ def post():
             "response_type": "in_channel",
             "text": url_stub + strip
         }
-        return jsonify(response)
     else:
-        abort(403)
+        response = {
+            "response_type": "whoops",
+            "text": "oh man something went wrong"
+        }
+    return jsonify(response)
 
 
 if __name__ == '__main__':
