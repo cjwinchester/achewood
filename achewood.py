@@ -7,12 +7,13 @@ app = Flask(__name__)
 
 webhook = environ.get('SLACK_WEBHOOK', None)
 
+
 @app.route('/', methods=['GET'])
 def index():
     return 'hello'
 
 
-@app.route('/post', methods=['POST'])
+@app.route('/post', methods=['GET', 'POST'])
 def post():
     url_stub = 'http://achewood.com/comic.php?date='
     strip = '10012001'
