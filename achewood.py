@@ -5,15 +5,8 @@ from strips import strips as strip_ls
 
 app = Flask(__name__)
 
-webhook = environ.get('SLACK_WEBHOOK', None)
 
-
-@app.route('/', methods=['GET'])
-def index():
-    return 'hello'
-
-
-@app.route('/post', methods=['GET', 'POST'])
+@app.route('/post', methods=['POST'])
 def post():
     url_stub = 'http://achewood.com/comic.php?date='
     random_day = random.randint(0, len(strip_ls))
