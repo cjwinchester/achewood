@@ -22,7 +22,7 @@ def post():
             ls = [row[0] for row in csv.reader(strips)]
             random_day = random.randint(0, ls.length)
             strip = ls[random_day]
-    except FileNotFoundError:
+    except:
         pass
 
     return url_stub + strip
