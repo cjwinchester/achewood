@@ -17,7 +17,7 @@ def index():
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     url_stub = 'http://achewood.com/comic.php?date='
-    random_day = random.randint(0, strip_ls.length)
+    random_day = random.randint(0, len(strip_ls))
     strip = strip_ls[random_day]
     return url_stub + strip
 
