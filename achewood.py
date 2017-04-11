@@ -2,6 +2,7 @@ from os import environ
 import random
 import csv
 from flask import Flask
+from strips import strips as strip_ls
 
 app = Flask(__name__)
 
@@ -16,15 +17,8 @@ def index():
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     url_stub = 'http://achewood.com/comic.php?date='
-    strip = '10012001'
-    try:
-        with open('achewood.txt', 'r') as strips:
-            ls = [row[0] for row in csv.reader(strips)]
-            random_day = random.randint(0, ls.length)
-            strip = ls[random_day]
-    except:
-        pass
-
+    random_day = random.randint(0, strip_ls.length)
+    strip = strip_ls[random_day]
     return url_stub + strip
 
 
